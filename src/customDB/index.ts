@@ -42,7 +42,7 @@ class CustomDB extends Map {
     updateRow(table: string, id: number | string, payload: any) {
         let { tbl, idx } = this._findRowById(table, id);
         if (idx < 0) throw new Error('Not found');
-        tbl[idx] = { ...tbl[idx], ...payload, modified: new Date(), };
+        tbl[idx] = { ...tbl[idx], ...payload, modified: new Date() };
         return tbl[idx];
     }
 }
