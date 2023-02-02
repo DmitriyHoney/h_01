@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import DB from '../customDB/';
+import { Product } from '../types/db.types';
 
 export default {
     getAll: (req: Request, res: Response) => res.send(DB.getRows('products')),
@@ -13,13 +14,12 @@ export default {
         }
     },
     create: (req: Request, res: Response) => {
-        const { title, description } = req.body;
-        const payload = { title, description };
+        const { title, description }: Product = req.body;
         if (!title || !description) res.status(400).send('Bad request');
-        else res.status(201 ).json(DB.createRow('products', payload));
+        else res.status(201 ).json(DB.createRow('products', { title, description }));
     },
     update: (req: Request, res: Response) => {
-        const { title, description } = req.body;
+        const { title, description }: Product = req.body;
         try {
             const row = DB.updateRow('products', req.params.id, { title, description })
             res.json(row);
