@@ -1,11 +1,12 @@
 import request from 'supertest';
 import { app, HTTP_STATUSES } from '../src/index';
+import { Product, ProductModel } from '../src/types/db.types';
 
 describe('/products', () => {
     const testInvalidRow = { name: 'Apple', description: 'This is Apple' };
-    const testValidRow = { title: 'Orange', description: 'This is Orange' };
-    const testValidUpdateRow = { title: 'Orange1', description: 'This is Orange1' };
-    let createdRow: any = null;
+    const testValidRow: Product = { title: 'Orange', description: 'This is Orange' };
+    const testValidUpdateRow: Product = { title: 'Orange1', description: 'This is Orange1' };
+    let createdRow: ProductModel;
     beforeAll(async () => {
         await request(app)
             .delete('/api/v1/products/__test__/data/')
