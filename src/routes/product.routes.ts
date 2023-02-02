@@ -8,5 +8,6 @@ router.post('/', productController.create);
 router.put('/:id/', productController.update);
 router.delete('/:id/', productController.deleteOne);
 router.delete('/', productController.deleteAll);
+router.delete('/__test__/data/', productController.deleteAll);
 
 export default router;

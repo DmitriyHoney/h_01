@@ -3,7 +3,15 @@ import bodyParser from 'body-parser';
 import productsRoute from './routes/product.routes';
 
 const PORT = 3000;
-const app = express();
+export const app = express();
+
+export const HTTP_STATUSES = {
+    OK_200: 200,
+    CREATED_201: 201,
+    NO_CONTENT_204: 204,
+    BAD_REQUEST_400: 400,
+    NOT_FOUND_404: 404,
+};
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

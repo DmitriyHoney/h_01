@@ -15,7 +15,8 @@ export default {
     create: (req: Request, res: Response) => {
         const { title, description } = req.body;
         const payload = { title, description };
-        res.json(DB.createRow('products', payload));
+        if (!title || !description) res.status(400).send('Bad request');
+        else res.status(201 ).json(DB.createRow('products', payload));
     },
     update: (req: Request, res: Response) => {
         const { title, description } = req.body;
