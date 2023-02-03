@@ -8,6 +8,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const product_routes_1 = __importDefault(require("./routes/product.routes"));
 const video_routes_1 = __importDefault(require("./routes/video.routes"));
+const video_controller_1 = __importDefault(require("./controllers/video.controller"));
 const PORT = 3000;
 exports.app = (0, express_1.default)();
 exports.HTTP_STATUSES = {
@@ -21,5 +22,6 @@ exports.app.use(body_parser_1.default.json());
 exports.app.use(body_parser_1.default.urlencoded({ extended: true }));
 exports.app.get('/', (req, res) => res.send('Hello, world!'));
 exports.app.use('/api/v1/products', product_routes_1.default);
+exports.app.delete('/ht_01/api/testing/all-data/', video_controller_1.default.deleteAll);
 exports.app.use('/hometask_01/api/videos', video_routes_1.default);
 exports.app.listen(PORT, () => console.log(`http://localhost:${PORT}`));

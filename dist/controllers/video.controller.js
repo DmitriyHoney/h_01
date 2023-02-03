@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const customDB_1 = __importDefault(require("../customDB/"));
+const videos_validation_1 = require("../validations/videos.validation");
+const __1 = require("..");
 exports.default = {
     getAll: (req, res) => res.send(customDB_1.default.getRows('videos')),
     getOne: (req, res) => {
@@ -19,10 +21,11 @@ exports.default = {
     },
     create: (req, res) => {
         const product = req.body;
-        if (!title || !description)
-            res.status(400).send('Bad request');
-        else
-            res.status(201).json(customDB_1.default.createRow('videos', { title, description }));
+        const isValid = (0, videos_validation_1.isPayloadValid)(req.body);
+        res.status(__1.HTTP_STATUSES.CREATED_201).json(customDB_1.default.createRow('videos', product));
+        // isValid 
+        //     ? res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', product)) 
+        //     : res.status(HTTP_STATUSES.BAD_REQUEST_400);
     },
     update: (req, res) => {
         const { title, description } = req.body;

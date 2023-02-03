@@ -18,9 +18,9 @@ export enum AvailableResolutionType {
 export type Video = {
     title: string,
     author: string,
-    canBeDownloaded: boolean,
-    minAgeRestriction: number | null,
-    publicationDate: string,
-    availableResolutions: Array<AvailableResolutionType> | null,
+    canBeDownloaded?: boolean,
+    minAgeRestriction?: number | null,
+    publicationDate?: string,
+    availableResolutions?: Array<AvailableResolutionType> | null,
 };
 export type VideoModel = Video & BaseDbEntity;

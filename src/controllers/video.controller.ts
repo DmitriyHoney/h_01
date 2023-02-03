@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import DB from '../customDB/';
 import { Product } from '../types/db.types';
+import { isPayloadValid } from '../validations/videos.validation';
+import { HTTP_STATUSES } from '..';
 
 export default {
     getAll: (req: Request, res: Response) => res.send(DB.getRows('videos')),
@@ -15,8 +17,11 @@ export default {
     },
     create: (req: Request, res: Response) => {
         const product: Product = req.body;
-        if (!title || !description) res.status(400).send('Bad request');
-        else res.status(201 ).json(DB.createRow('videos', { title, description }));
+        const isValid = isPayloadValid(req.body);
+        res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', product)) 
+        // isValid 
+        //     ? res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', product)) 
+        //     : res.status(HTTP_STATUSES.BAD_REQUEST_400);
     },
     update: (req: Request, res: Response) => {
         const { title, description }: Product = req.body;

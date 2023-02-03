@@ -1,12 +1,19 @@
 import request from 'supertest';
 import { app, HTTP_STATUSES } from '../index';
-import { Product, ProductModel } from '../types/db.types';
+import { AvailableResolutionType, Video, VideoModel } from '../types/db.types';
 
 describe('/videos', () => {
     const testInvalidRow = { name: 'Apple', description: 'This is Apple' };
-    const testValidRow: Product = { title: 'Orange', description: 'This is Orange' };
-    const testValidUpdateRow: Product = { title: 'Orange1', description: 'This is Orange1' };
-    let createdRow: ProductModel;
+    const testValidRow: Video = { 
+        author: 'Pavel',
+        publicationDate: new Date().toISOString(),
+        availableResolutions: [AvailableResolutionType.P144, AvailableResolutionType.P720],
+        canBeDownloaded: true,
+        minAgeRestriction: null,
+        title: 'How create telegram',
+    };
+    // const testValidUpdateRow: Video = {  };
+    let createdRow: VideoModel;
     const url = '/hometask_01/api/videos'
 
     beforeAll(async () => {
@@ -28,5 +35,18 @@ describe('/videos', () => {
         await request(app)
             .get(url)
             .expect(HTTP_STATUSES.OK_200, [])
+    });
+
+    it('should create video', async () => {
+        const createdRow = await request(app)
+            .post(url)
+            .send(testValidRow)
+            .expect(HTTP_STATUSES.CREATED_201)
+        
+        expect(createdRow.body).toEqual({
+            id: expect.any(Number),
+            createdAt: expect.any(String),
+            ...testValidRow
+        });
     });
 });

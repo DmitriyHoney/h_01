@@ -14,10 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const index_1 = require("../index");
+const db_types_1 = require("../types/db.types");
 describe('/videos', () => {
     const testInvalidRow = { name: 'Apple', description: 'This is Apple' };
-    const testValidRow = { title: 'Orange', description: 'This is Orange' };
-    const testValidUpdateRow = { title: 'Orange1', description: 'This is Orange1' };
+    const testValidRow = {
+        author: 'Pavel',
+        publicationDate: new Date().toISOString(),
+        availableResolutions: [db_types_1.AvailableResolutionType.P144, db_types_1.AvailableResolutionType.P720],
+        canBeDownloaded: true,
+        minAgeRestriction: null,
+        title: 'How create telegram',
+    };
+    // const testValidUpdateRow: Video = {  };
     let createdRow;
     const url = '/hometask_01/api/videos';
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -35,5 +43,12 @@ describe('/videos', () => {
         yield (0, supertest_1.default)(index_1.app)
             .get(url)
             .expect(index_1.HTTP_STATUSES.OK_200, []);
+    }));
+    it('should create video', () => __awaiter(void 0, void 0, void 0, function* () {
+        const createdRow = yield (0, supertest_1.default)(index_1.app)
+            .post(url)
+            .send(testValidRow)
+            .expect(index_1.HTTP_STATUSES.CREATED_201);
+        expect(createdRow.body).toEqual(Object.assign({ id: expect.any(Number), createdAt: expect.any(String) }, testValidRow));
     }));
 });
