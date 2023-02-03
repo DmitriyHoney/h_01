@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const db_types_1 = require("../types/db.types");
 class CustomDB extends Map {
     _getOrCreateTable(table) {
         const tbl = this.get(table);
@@ -24,7 +25,7 @@ class CustomDB extends Map {
     }
     createRow(table, payload) {
         const date = new Date();
-        const newRow = Object.assign({ id: date.getTime(), created: date, modified: date }, payload);
+        const newRow = Object.assign({ id: date.getTime(), createdAt: date }, payload);
         this._getOrCreateTable(table).push(newRow);
         return newRow;
     }
@@ -43,14 +44,19 @@ class CustomDB extends Map {
         let { tbl, idx } = this._findRowById(table, id);
         if (idx < 0)
             throw new Error('Not found');
-        tbl[idx] = Object.assign(Object.assign(Object.assign({}, tbl[idx]), payload), { modified: new Date() });
+        tbl[idx] = Object.assign(Object.assign({}, tbl[idx]), payload);
         return tbl[idx];
     }
 }
 const DB = new CustomDB();
-DB.set('products', [
-    { id: new Date().getTime(), created: new Date(), modified: new Date(), title: 'Apple', descriptions: 'This is apple' },
-    { id: new Date().getTime() + 1, created: new Date(), modified: new Date(), title: 'Orange', descriptions: 'This is orange' }
-]);
-const products = DB.get('products');
+const initProducts = [
+    { id: new Date().getTime(), createdAt: new Date().toISOString(), title: 'Apple', description: 'This is apple' },
+    { id: new Date().getTime() + 1, createdAt: new Date().toISOString(), title: 'Orange', description: 'This is orange' }
+];
+DB.set('products', initProducts);
+const initVideos = [
+    { id: new Date().getTime(), createdAt: new Date().toISOString(), author: 'Platon', canBeDownloaded: true, availableResolutions: [db_types_1.AvailableResolutionType.P144], minAgeRestriction: null, publicationDate: new Date().toISOString(), title: 'Platon' },
+    { id: new Date().getTime() + 1, createdAt: new Date().toISOString(), author: 'Marcus', canBeDownloaded: false, availableResolutions: [db_types_1.AvailableResolutionType.P144], minAgeRestriction: null, publicationDate: new Date().toISOString(), title: 'Marcus' },
+];
+DB.set('videos', initVideos);
 exports.default = DB;

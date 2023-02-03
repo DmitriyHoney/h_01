@@ -50,7 +50,8 @@ describe('/products', () => {
         createdRow = result.body;
         expect(result.body).toEqual({
             id: expect.any(Number),
-            createdAt: expect.any(String),
+            created: expect.any(String),
+            modified: expect.any(String),
             title: testValidRow.title,
             description: testValidRow.description,
         });
@@ -64,7 +65,8 @@ describe('/products', () => {
             .expect(index_1.HTTP_STATUSES.OK_200, createdRow);
         expect(result.body).toEqual({
             id: expect.any(Number),
-            createdAt: expect.any(String),
+            created: expect.any(String),
+            modified: expect.any(String),
             title: testValidRow.title,
             description: testValidRow.description,
         });
@@ -76,7 +78,8 @@ describe('/products', () => {
             .expect(index_1.HTTP_STATUSES.OK_200);
         expect(result.body).toEqual({
             id: expect.any(Number),
-            createdAt: expect.any(String),
+            created: expect.any(String),
+            modified: expect.any(String),
             title: testValidUpdateRow.title,
             description: testValidUpdateRow.description,
         });

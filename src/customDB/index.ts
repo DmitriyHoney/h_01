@@ -1,3 +1,5 @@
+import { AvailableResolutionType, ProductModel, VideoModel } from "../types/db.types";
+
 class CustomDB extends Map {
     _getOrCreateTable(table: string) {
         const tbl = this.get(table);
@@ -22,8 +24,7 @@ class CustomDB extends Map {
         const date = new Date();
         const newRow = { 
             id: date.getTime(), 
-            created: date,
-            modified: date,
+            createdAt: date,
             ...payload 
         };
         this._getOrCreateTable(table).push(newRow);
@@ -42,14 +43,19 @@ class CustomDB extends Map {
     updateRow(table: string, id: number | string, payload: any) {
         let { tbl, idx } = this._findRowById(table, id);
         if (idx < 0) throw new Error('Not found');
-        tbl[idx] = { ...tbl[idx], ...payload, modified: new Date() };
+        tbl[idx] = { ...tbl[idx], ...payload };
         return tbl[idx];
     }
 }
 const DB = new CustomDB();
-DB.set('products', [
-    { id: new Date().getTime(), created: new Date(), modified: new Date(), title: 'Apple', descriptions: 'This is apple' },
-    { id: new Date().getTime() + 1, created: new Date(), modified: new Date(), title: 'Orange', descriptions: 'This is orange' }
-]);
-const products = DB.get('products');
+const initProducts: Array<ProductModel> = [
+    { id: new Date().getTime(), createdAt: new Date().toISOString(), title: 'Apple', description: 'This is apple' },
+    { id: new Date().getTime() + 1, createdAt: new Date().toISOString(), title: 'Orange', description: 'This is orange' }
+]
+DB.set('products', initProducts);
+const initVideos: Array<VideoModel> = [
+    { id: new Date().getTime(), createdAt: new Date().toISOString(), author: 'Platon', canBeDownloaded: true, availableResolutions: [AvailableResolutionType.P144], minAgeRestriction: null, publicationDate: new Date().toISOString(), title: 'Platon'},
+    { id: new Date().getTime() + 1, createdAt: new Date().toISOString(), author: 'Marcus', canBeDownloaded: false, availableResolutions: [AvailableResolutionType.P144], minAgeRestriction: null, publicationDate: new Date().toISOString(), title: 'Marcus'},
+];
+DB.set('videos', initVideos);
 export default DB;
