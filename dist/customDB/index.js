@@ -48,5 +48,9 @@ class CustomDB extends Map {
     }
 }
 const DB = new CustomDB();
-DB.set('products', []);
+DB.set('products', [
+    { title: 'Apple', descriptions: 'This is apple' },
+    { title: 'Orange', descriptions: 'This is orange' }
+]);
+const products = DB.get('products');
 exports.default = DB;

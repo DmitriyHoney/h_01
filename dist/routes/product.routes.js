@@ -12,4 +12,5 @@ router.post('/', product_controller_1.default.create);
 router.put('/:id/', product_controller_1.default.update);
 router.delete('/:id/', product_controller_1.default.deleteOne);
 router.delete('/', product_controller_1.default.deleteAll);
+router.delete('/__test__/data/', product_controller_1.default.deleteAll);
 exports.default = router;
