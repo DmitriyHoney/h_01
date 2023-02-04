@@ -45,7 +45,7 @@ export const isPayloadValid = (payload: Object, schema: Object) => {
         // @ts-ignore
         const { type, condition, maxLength } = schema[key];
         const valueField = value;
-        if (maxLength) {
+        if (maxLength && typeof value === 'string') {
             value.length > maxLength
                 ? addError(key, `The ${key} field length must be ${maxLength}`)
                 : null;

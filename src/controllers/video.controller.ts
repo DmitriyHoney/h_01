@@ -24,7 +24,8 @@ export default {
             errors.errorsMessages.length
                 ? res.status(HTTP_STATUSES.BAD_REQUEST_400).json(errors)
                 : res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', result)) 
-        } catch {
+        } catch (e) {
+            console.log(e);
             res.status(HTTP_STATUSES.SERVER_ERROR_500).json('Internal server error') 
         }
         
