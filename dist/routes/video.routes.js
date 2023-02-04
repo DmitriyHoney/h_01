@@ -11,5 +11,4 @@ router.get('/:id/', video_controller_1.default.getOne);
 router.post('/', video_controller_1.default.create);
 router.put('/:id/', video_controller_1.default.update);
 router.delete('/:id/', video_controller_1.default.deleteOne);
-router.delete('/', video_controller_1.default.deleteAll);
 exports.default = router;

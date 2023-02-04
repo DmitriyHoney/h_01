@@ -37,12 +37,14 @@ describe('/videos', () => {
     });
 
     it('should create video', async () => {
-        const createdRow = await request(app)
+        const created = await request(app)
             .post(url)
             .send(testValidRow)
             .expect(HTTP_STATUSES.CREATED_201)
         
-        expect(createdRow.body).toEqual({
+        createdRow = created.body;
+        
+        expect(created.body).toEqual({
             id: expect.any(Number),
             createdAt: expect.any(String),
             ...testValidRow
@@ -50,16 +52,58 @@ describe('/videos', () => {
     });
 
     it('shouldn`t create video (check validation)', async () => {
-        const createdRow = await request(app)
+        const created = await request(app)
             .post(url)
             .send(testInvalidRow)
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
         
-        expect(createdRow.body).toEqual([
+        expect(created.body).toEqual([
             {
                 field: "author",
                 message: "The author field is required"
             }
         ]);
+    });
+
+    it('should get video by id', async () => {
+        await request(app)
+            .get(`${url}/${createdRow.id}`)
+            .expect(HTTP_STATUSES.OK_200, createdRow)
+    });
+
+    it('shouldn`t get video by id - not Found', async () => {
+        await request(app)
+            .get(`${url}/12312`)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
+    });
+
+    it('should update video by id', async () => {
+        await request(app)
+            .put(`${url}/${createdRow.id}`)
+            .send({ ...testValidRow, title: 'updated' })
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+    });
+
+    it('shouldn`t update video by id', async () => {
+        await request(app)
+            .put(`${url}/123`)
+            .send({ ...testValidRow, title: 'updated' })
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
+    });
+
+    it('shouldn`t delete video by id', async () => {
+        await request(app)
+            .delete(`${url}/123`)
+            .expect(HTTP_STATUSES.NOT_FOUND_404)
+    });
+
+    it('should delete video by id', async () => {
+        await request(app)
+            .delete(`${url}/${createdRow.id}`)
+            .expect(HTTP_STATUSES.NO_CONTENT_204)
+
+        await request(app)
+            .get(url)
+            .expect(HTTP_STATUSES.OK_200, [])
     });
 });

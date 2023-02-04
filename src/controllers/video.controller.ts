@@ -30,6 +30,26 @@ export default {
         
     },
     update: (req: Request, res: Response) => {
+        try {
+            const { errors, result } = isVideoPayloadValid({
+                createdAt: new Date().toISOString(),
+                ...req.body,
+            });
+            if (errors.length) {
+                res.status(HTTP_STATUSES.BAD_REQUEST_400).json(errors);
+                return;
+            }
+            try {
+                DB.updateRow('videos', req.params.id, result);
+                res.status(HTTP_STATUSES.NO_CONTENT_204);
+            } catch (e) {
+                console.log(e);
+                res.status(HTTP_STATUSES.NOT_FOUND_404).json('Not found');
+            }
+        } catch {
+            res.status(HTTP_STATUSES.SERVER_ERROR_500).json('Internal server error') 
+        }
+
         const { title, description }: Product = req.body;
         try {
             const row = DB.updateRow('videos', req.params.id, { title, description })
@@ -41,7 +61,7 @@ export default {
     },
     deleteOne: (req: Request, res: Response) => {
         try {
-            const el = DB.deleteRow('videos', req.params.id)
+            DB.deleteRow('videos', req.params.id)
             res.status(204).json('OK');
         } catch (e: any) {
             if (e.message === 'Not found') res.status(404).send('Not found');

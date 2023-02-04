@@ -7,6 +7,5 @@ router.get('/:id/', videoController.getOne);
 router.post('/', videoController.create);
 router.put('/:id/', videoController.update);
 router.delete('/:id/', videoController.deleteOne);
-router.delete('/', videoController.deleteAll);
 
 export default router;

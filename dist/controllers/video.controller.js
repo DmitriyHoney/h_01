@@ -31,6 +31,24 @@ exports.default = {
         }
     },
     update: (req, res) => {
+        try {
+            const { errors, result } = (0, videos_validation_1.isVideoPayloadValid)(Object.assign({ createdAt: new Date().toISOString() }, req.body));
+            if (errors.length) {
+                res.status(__1.HTTP_STATUSES.BAD_REQUEST_400).json(errors);
+                return;
+            }
+            try {
+                customDB_1.default.updateRow('videos', req.params.id, result);
+                res.status(__1.HTTP_STATUSES.NO_CONTENT_204);
+            }
+            catch (e) {
+                console.log(e);
+                res.status(__1.HTTP_STATUSES.NOT_FOUND_404).json('Not found');
+            }
+        }
+        catch (_a) {
+            res.status(__1.HTTP_STATUSES.SERVER_ERROR_500).json('Internal server error');
+        }
         const { title, description } = req.body;
         try {
             const row = customDB_1.default.updateRow('videos', req.params.id, { title, description });
@@ -44,7 +62,7 @@ exports.default = {
     },
     deleteOne: (req, res) => {
         try {
-            const el = customDB_1.default.deleteRow('videos', req.params.id);
+            customDB_1.default.deleteRow('videos', req.params.id);
             res.status(204).json('OK');
         }
         catch (e) {

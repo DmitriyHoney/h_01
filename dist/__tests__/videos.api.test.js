@@ -44,22 +44,58 @@ describe('/videos', () => {
             .expect(index_1.HTTP_STATUSES.OK_200, []);
     }));
     it('should create video', () => __awaiter(void 0, void 0, void 0, function* () {
-        const createdRow = yield (0, supertest_1.default)(index_1.app)
+        const created = yield (0, supertest_1.default)(index_1.app)
             .post(url)
             .send(testValidRow)
             .expect(index_1.HTTP_STATUSES.CREATED_201);
-        expect(createdRow.body).toEqual(Object.assign({ id: expect.any(Number), createdAt: expect.any(String) }, testValidRow));
+        createdRow = created.body;
+        expect(created.body).toEqual(Object.assign({ id: expect.any(Number), createdAt: expect.any(String) }, testValidRow));
     }));
     it('shouldn`t create video (check validation)', () => __awaiter(void 0, void 0, void 0, function* () {
-        const createdRow = yield (0, supertest_1.default)(index_1.app)
+        const created = yield (0, supertest_1.default)(index_1.app)
             .post(url)
             .send(testInvalidRow)
             .expect(index_1.HTTP_STATUSES.BAD_REQUEST_400);
-        expect(createdRow.body).toEqual([
+        expect(created.body).toEqual([
             {
                 field: "author",
                 message: "The author field is required"
             }
         ]);
+    }));
+    it('should get video by id', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .get(`${url}/${createdRow.id}`)
+            .expect(index_1.HTTP_STATUSES.OK_200, createdRow);
+    }));
+    it('shouldn`t get video by id - not Found', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .get(`${url}/12312`)
+            .expect(index_1.HTTP_STATUSES.NOT_FOUND_404);
+    }));
+    it('should update video by id', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .put(`${url}/${createdRow.id}`)
+            .send(Object.assign(Object.assign({}, testValidRow), { title: 'updated' }))
+            .expect(index_1.HTTP_STATUSES.NO_CONTENT_204);
+    }));
+    it('shouldn`t update video by id', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .put(`${url}/123`)
+            .send(Object.assign(Object.assign({}, testValidRow), { title: 'updated' }))
+            .expect(index_1.HTTP_STATUSES.NOT_FOUND_404);
+    }));
+    it('shouldn`t delete video by id', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .delete(`${url}/123`)
+            .expect(index_1.HTTP_STATUSES.NOT_FOUND_404);
+    }));
+    it('should delete video by id', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield (0, supertest_1.default)(index_1.app)
+            .delete(`${url}/${createdRow.id}`)
+            .expect(index_1.HTTP_STATUSES.NO_CONTENT_204);
+        yield (0, supertest_1.default)(index_1.app)
+            .get(url)
+            .expect(index_1.HTTP_STATUSES.OK_200, []);
     }));
 });
