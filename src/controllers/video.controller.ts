@@ -39,6 +39,8 @@ export default {
                 res.status(HTTP_STATUSES.BAD_REQUEST_400).json(errors);
                 return;
             }
+            //@ts-ignore
+            delete result.createdAt;
             try {
                 DB.updateRow('videos', req.params.id, result);
                 res.status(HTTP_STATUSES.NO_CONTENT_204);
