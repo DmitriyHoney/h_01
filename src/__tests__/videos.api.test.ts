@@ -17,12 +17,12 @@ describe('/videos', () => {
 
     beforeAll(async () => {
         await request(app)
-            .delete('/ht_01/api/testing/all-data/')
+            .delete('/hometask_01/api/testing/all-data')
     });
 
     it('should delete all rows', async () => {
         await request(app)
-            .delete('/ht_01/api/testing/all-data/')
+            .delete('/hometask_01/api/testing/all-data')
 
         await request(app)
             .get(url)

@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => res.send('Hello, world!'));
 app.use('/api/v1/products', productsRoute);
 
-app.delete('/ht_01/api/testing/all-data/', videoController.deleteAll);
+app.delete('/hometask_01/api/testing/all-data/', videoController.deleteAll);
 app.use('/hometask_01/api/videos', videosRoute);
 
 
