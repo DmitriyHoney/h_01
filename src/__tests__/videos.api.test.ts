@@ -57,12 +57,14 @@ describe('/videos', () => {
             .send(testInvalidRow)
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
         
-        expect(created.body).toEqual([
-            {
-                field: "author",
-                message: "The author field is required"
-            }
-        ]);
+        expect(created.body).toEqual({
+            errorsMessages: [
+                {
+                    field: "author",
+                    message: "The author field is required"
+                }
+            ]
+        });
     });
 
     it('should get video by id', async () => {

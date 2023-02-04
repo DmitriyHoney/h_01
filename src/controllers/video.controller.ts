@@ -21,7 +21,7 @@ export default {
                 createdAt: new Date().toISOString(),
                 ...req.body,
             });
-            errors.length
+            errors.errorsMessages.length
                 ? res.status(HTTP_STATUSES.BAD_REQUEST_400).json(errors)
                 : res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', result)) 
         } catch {
@@ -35,7 +35,7 @@ export default {
                 createdAt: new Date().toISOString(),
                 ...req.body,
             });
-            if (errors.length) {
+            if (errors.errorsMessages.length) {
                 res.status(HTTP_STATUSES.BAD_REQUEST_400).json(errors);
                 return;
             }

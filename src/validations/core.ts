@@ -105,5 +105,5 @@ export const isPayloadValid = (payload: Object, schema: Object) => {
         checkConditions(key, value);
     });
 
-    return { errors, result: !errors.length ? collectAndInitDefault(payload) : null }
+    return { errors: { errorsMessages: errors }, result: !errors.length ? collectAndInitDefault(payload) : null }
 };
