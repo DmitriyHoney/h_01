@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import DB from '../customDB/';
 import { Product } from '../types/db.types';
-import { isPayloadValid } from '../validations/videos.validation';
+import { isVideoPayloadValid } from '../validations/videos.validation';
 import { HTTP_STATUSES } from '..';
 
 export default {
@@ -16,12 +16,18 @@ export default {
         }
     },
     create: (req: Request, res: Response) => {
-        const product: Product = req.body;
-        const isValid = isPayloadValid(req.body);
-        res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', product)) 
-        // isValid 
-        //     ? res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', product)) 
-        //     : res.status(HTTP_STATUSES.BAD_REQUEST_400);
+        try {
+            const { errors, result } = isVideoPayloadValid({
+                createdAt: new Date().toISOString(),
+                ...req.body,
+            });
+            errors.length
+                ? res.status(HTTP_STATUSES.BAD_REQUEST_400).json(errors)
+                : res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', result)) 
+        } catch {
+            res.status(HTTP_STATUSES.SERVER_ERROR_500).json('Internal server error') 
+        }
+        
     },
     update: (req: Request, res: Response) => {
         const { title, description }: Product = req.body;

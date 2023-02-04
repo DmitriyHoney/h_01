@@ -3,16 +3,15 @@ import { app, HTTP_STATUSES } from '../index';
 import { AvailableResolutionType, Video, VideoModel } from '../types/db.types';
 
 describe('/videos', () => {
-    const testInvalidRow = { name: 'Apple', description: 'This is Apple' };
+    const testInvalidRow = { title: 'How create telegram' };
     const testValidRow: Video = { 
         author: 'Pavel',
+        title: 'How create telegram',
         publicationDate: new Date().toISOString(),
         availableResolutions: [AvailableResolutionType.P144, AvailableResolutionType.P720],
         canBeDownloaded: true,
         minAgeRestriction: null,
-        title: 'How create telegram',
     };
-    // const testValidUpdateRow: Video = {  };
     let createdRow: VideoModel;
     const url = '/hometask_01/api/videos'
 
@@ -48,5 +47,19 @@ describe('/videos', () => {
             createdAt: expect.any(String),
             ...testValidRow
         });
+    });
+
+    it('shouldn`t create video (check validation)', async () => {
+        const createdRow = await request(app)
+            .post(url)
+            .send(testInvalidRow)
+            .expect(HTTP_STATUSES.BAD_REQUEST_400)
+        
+        expect(createdRow.body).toEqual([
+            {
+                field: "author",
+                message: "The author field is required"
+            }
+        ]);
     });
 });

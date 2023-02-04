@@ -20,12 +20,15 @@ exports.default = {
         }
     },
     create: (req, res) => {
-        const product = req.body;
-        const isValid = (0, videos_validation_1.isPayloadValid)(req.body);
-        res.status(__1.HTTP_STATUSES.CREATED_201).json(customDB_1.default.createRow('videos', product));
-        // isValid 
-        //     ? res.status(HTTP_STATUSES.CREATED_201).json(DB.createRow('videos', product)) 
-        //     : res.status(HTTP_STATUSES.BAD_REQUEST_400);
+        try {
+            const { errors, result } = (0, videos_validation_1.isVideoPayloadValid)(Object.assign({ createdAt: new Date().toISOString() }, req.body));
+            errors.length
+                ? res.status(__1.HTTP_STATUSES.BAD_REQUEST_400).json(errors)
+                : res.status(__1.HTTP_STATUSES.CREATED_201).json(customDB_1.default.createRow('videos', result));
+        }
+        catch (_a) {
+            res.status(__1.HTTP_STATUSES.SERVER_ERROR_500).json('Internal server error');
+        }
     },
     update: (req, res) => {
         const { title, description } = req.body;

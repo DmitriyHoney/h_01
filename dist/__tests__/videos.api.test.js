@@ -16,16 +16,15 @@ const supertest_1 = __importDefault(require("supertest"));
 const index_1 = require("../index");
 const db_types_1 = require("../types/db.types");
 describe('/videos', () => {
-    const testInvalidRow = { name: 'Apple', description: 'This is Apple' };
+    const testInvalidRow = { title: 'How create telegram' };
     const testValidRow = {
         author: 'Pavel',
+        title: 'How create telegram',
         publicationDate: new Date().toISOString(),
         availableResolutions: [db_types_1.AvailableResolutionType.P144, db_types_1.AvailableResolutionType.P720],
         canBeDownloaded: true,
         minAgeRestriction: null,
-        title: 'How create telegram',
     };
-    // const testValidUpdateRow: Video = {  };
     let createdRow;
     const url = '/hometask_01/api/videos';
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -50,5 +49,17 @@ describe('/videos', () => {
             .send(testValidRow)
             .expect(index_1.HTTP_STATUSES.CREATED_201);
         expect(createdRow.body).toEqual(Object.assign({ id: expect.any(Number), createdAt: expect.any(String) }, testValidRow));
+    }));
+    it('shouldn`t create video (check validation)', () => __awaiter(void 0, void 0, void 0, function* () {
+        const createdRow = yield (0, supertest_1.default)(index_1.app)
+            .post(url)
+            .send(testInvalidRow)
+            .expect(index_1.HTTP_STATUSES.BAD_REQUEST_400);
+        expect(createdRow.body).toEqual([
+            {
+                field: "author",
+                message: "The author field is required"
+            }
+        ]);
     }));
 });

@@ -13,6 +13,7 @@ export const HTTP_STATUSES = {
     NO_CONTENT_204: 204,
     BAD_REQUEST_400: 400,
     NOT_FOUND_404: 404,
+    SERVER_ERROR_500: 500,
 };
 
 app.use(bodyParser.json());

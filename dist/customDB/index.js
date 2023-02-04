@@ -25,7 +25,7 @@ class CustomDB extends Map {
     }
     createRow(table, payload) {
         const date = new Date();
-        const newRow = Object.assign({ id: date.getTime(), createdAt: date }, payload);
+        const newRow = Object.assign({ id: date.getTime(), createdAt: payload.createdAt ? payload.createdAt : date }, payload);
         this._getOrCreateTable(table).push(newRow);
         return newRow;
     }

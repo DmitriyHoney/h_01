@@ -17,6 +17,7 @@ exports.HTTP_STATUSES = {
     NO_CONTENT_204: 204,
     BAD_REQUEST_400: 400,
     NOT_FOUND_404: 404,
+    SERVER_ERROR_500: 500,
 };
 exports.app.use(body_parser_1.default.json());
 exports.app.use(body_parser_1.default.urlencoded({ extended: true }));
