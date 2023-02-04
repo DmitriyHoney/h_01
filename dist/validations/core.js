@@ -104,6 +104,6 @@ const isPayloadValid = (payload, schema) => {
         checkHardType(key, value);
         checkConditions(key, value);
     });
-    return { errors, result: !errors.length ? collectAndInitDefault(payload) : null };
+    return { errors: { errorsMessages: errors }, result: !errors.length ? collectAndInitDefault(payload) : null };
 };
 exports.isPayloadValid = isPayloadValid;

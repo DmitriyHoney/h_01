@@ -22,7 +22,7 @@ exports.default = {
     create: (req, res) => {
         try {
             const { errors, result } = (0, videos_validation_1.isVideoPayloadValid)(Object.assign({ createdAt: new Date().toISOString() }, req.body));
-            errors.length
+            errors.errorsMessages.length
                 ? res.status(__1.HTTP_STATUSES.BAD_REQUEST_400).json(errors)
                 : res.status(__1.HTTP_STATUSES.CREATED_201).json(customDB_1.default.createRow('videos', result));
         }
@@ -33,10 +33,12 @@ exports.default = {
     update: (req, res) => {
         try {
             const { errors, result } = (0, videos_validation_1.isVideoPayloadValid)(Object.assign({ createdAt: new Date().toISOString() }, req.body));
-            if (errors.length) {
+            if (errors.errorsMessages.length) {
                 res.status(__1.HTTP_STATUSES.BAD_REQUEST_400).json(errors);
                 return;
             }
+            //@ts-ignore
+            delete result.createdAt;
             try {
                 customDB_1.default.updateRow('videos', req.params.id, result);
                 res.status(__1.HTTP_STATUSES.NO_CONTENT_204);
