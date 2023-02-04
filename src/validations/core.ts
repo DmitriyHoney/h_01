@@ -43,8 +43,13 @@ export const isPayloadValid = (payload: Object, schema: Object) => {
     };
     const checkConditions = (key: string, value: any) => {
         // @ts-ignore
-        const { type, condition } = schema[key];
+        const { type, condition, maxLength } = schema[key];
         const valueField = value;
+        if (maxLength) {
+            value.length > maxLength
+                ? addError(key, `The ${key} field length must be ${maxLength}`)
+                : null;
+        }
         if (!condition) return;
         // @ts-ignore
         if (schema[key].hasOwnProperty('default') && value === schema[key].default) return;
